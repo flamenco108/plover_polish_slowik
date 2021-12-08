@@ -1,4 +1,4 @@
-# ХЦФСТПВКМРНЕЁ*ОАИСРТЛВКМНЙЪ
+# XFZSKTPVLRJE~*IAUCRLBSGTWoy
 KEYS = (
     '1-', '2-', '3-', '4-', '5-', '6-', '7-', '8-', '9-', '0-',
     'X-', 'F-', 'Z-', 'S-', 'K-', 'T-', 'P-', 'V-', 'L-', 'R-',
@@ -111,10 +111,10 @@ KEYMAPS = {
     },
 }
 
-DICTIONARIES_ROOT = 'asset:plover_western_slavic_slovik:dictionaries'
+DICTIONARIES_ROOT = 'asset:plover_polish_slowik:dictionaries'
 DEFAULT_DICTIONARIES = (
-    'slovik_pl_user.json',
-    'slovik_pl_suffixes.json',
-    'slovik_pl_prefixes.json',
-    'slovik_pl_roots.json',
+    'slowik_user.json',
+    'slowik_suffixes.json',
+    'slowik_prefixes.json',
+    'slowik_roots.json',
 )
