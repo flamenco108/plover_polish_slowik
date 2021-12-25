@@ -5,7 +5,46 @@ import os
 import typing
 
 
-def find_prefixes(file_in, separator, max_length, verbose=False) -> dict:
+def main():  # Zamyka w sobie całe działanie skryptu, żeby można było importować pozostałe elementy
+    parser = argparse.ArgumentParser(
+        formatter_class=CustomFormatter,
+        description='Znajduje przedrostki w słowniku podzielonym na sylaby',
+        epilog="""Przedrostki spełniają następujące warunki:
+  - Składają się z ciągu jednej lub więcej sylab
+  - Rozpoczynają dane słowo
+  - Pozostała część słowa po usunięciu przedrostka także występuje w słowniku""")
+    parser.add_argument('-v', '--verbose', action='store_true',
+                        help='wypisuj więcej informacji w trakcie działania')
+    parser.add_argument('-i', '--input',
+                        help='plik słownika do przeszukania', default='slownik-testowy.txt')
+    parser.add_argument('-o', '--output',
+                        help='wynikowy plik z przedrostkami', default='wyniki/przedrostki.txt')
+    parser.add_argument('-L', '--max-length', type=int,
+                        help='maksymalna liczba sylab przedrostka', default=2)
+    parser.add_argument('--separator',
+                        help='znak rozdzielający sylaby', default='=')
+    args = parser.parse_args()
+
+    if args.verbose:
+        print('Opcje: ', args)
+
+    # Utwórz folder na wyniki jeśli nie istnieje
+    os.makedirs(os.path.dirname(args.output), exist_ok=True)
+
+    prefixes_found_count = 0
+    with open(args.input, 'r') as file_in:
+        with open(args.output, 'w') as file_out:
+            prefixes = find_prefixes(file_in, args.separator,
+                                     args.max_length, args.verbose)
+
+            # Posortuj klucze według wartości dla nich, malejąco
+            common_prefixes = sorted(prefixes, key=prefixes.get, reverse=True)
+
+            file_out.write('\n'.join(common_prefixes))
+            print(f'Zapisano {len(prefixes)} przedrostków do {args.output}')
+
+
+def find_prefixes(file_in: typing.TextIO, separator: str, max_length: int, verbose=False) -> dict:
     """Znajduje przedrostki w słowach
 
     Parameters
@@ -29,9 +68,10 @@ def find_prefixes(file_in, separator, max_length, verbose=False) -> dict:
     if verbose:
         print('Unikalne słowa: ', words_in)
 
-    line_count = len(words_in)  # Zakładam unikalne słowa, tak mi najwygodniej
+    # Zakładając unikalne słowa w pliku, tak mi wygodniej
+    line_count = len(words_in)
 
-    valid_prefixes = {}
+    valid_prefixes = dict()
 
     file_in.seek(0)  # Przewiń z powrotem na początek pliku
     for line_number, line in enumerate(file_in):
@@ -70,53 +110,11 @@ def find_prefixes(file_in, separator, max_length, verbose=False) -> dict:
     return valid_prefixes
 
 
+# Potrzebna żeby skorzystać jednocześnie z wyświetlania domyślnych wartości i ręcznego łamania linii w opisie
 class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.RawDescriptionHelpFormatter):
-    """Potrzebna żeby skorzystać jednocześnie z wyświetlania domyślnych wartości i ręcznego łamania linii w opisie
-    """
     pass
 
 
-def main():
-    """Zamyka w sobie całe działanie skryptu, żeby można było importować pozostałe elementy
-    """
-    parser = argparse.ArgumentParser(
-        formatter_class=CustomFormatter,
-        description='Znajduje przedrostki w słowniku podzielonym na sylaby',
-        epilog="""Przedrostki spełniają następujące warunki:
-  - Składają się z ciągu jednej lub więcej sylab
-  - Rozpoczynają dane słowo
-  - Pozostała część słowa po usunięciu przedrostka także występuje w słowniku""")
-    parser.add_argument('-v', '--verbose', action='store_true',
-                        help='wypisuj więcej informacji w trakcie działania')
-    parser.add_argument('-i', '--input',
-                        help='plik słownika do przeszukania', default='slownik-testowy.txt')
-    parser.add_argument('-o', '--output',
-                        help='wynikowy plik z przedrostkami', default='wyniki/przedrostki.txt')
-    parser.add_argument('-L', '--max-length', type=int,
-                        help='maksymalna liczba sylab przedrostka', default=2)
-    parser.add_argument('--separator',
-                        help='znak rozdzielający sylaby', default='=')
-    args = parser.parse_args()
-
-    if args.verbose:
-        print('Opcje: ', args)
-
-    # Utwórz folder na wyniki jeśli nie istnieje
-    os.makedirs(os.path.dirname(args.output), exist_ok=True)
-
-    prefixes_found_count = 0
-    with open(args.input, 'r') as file_in:
-        with open(args.output, 'w') as file_out:
-            prefixes = find_prefixes(file_in, args.separator,
-                                     args.max_length, args.verbose)
-
-            # Posortuj klucze według wartości dla nich, malejąco
-            common_prefixes = sorted(prefixes, key=prefixes.get, reverse=True)
-            file_out.write('\n'.join(common_prefixes))
-
-            print(f'Zapisano {len(prefixes)} przedrostków do {args.output}')
-
-
-# Ten warunek się wykona tylko jeśli to jest właśnie uruchamiany skrypt
+# Ten warunek jest prawdziwy tylko jeśli to jest właśnie uruchamiany skrypt
 if __name__ == '__main__':
     main()
