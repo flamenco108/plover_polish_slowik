@@ -6,6 +6,8 @@ kla=wia=tu=ra
 nad=wa=ga
 prze=wa=ga
 wa=ga
+po=wie=lacz
+przed=wiecz=ny
 # Liczenie ile słów tworzy
 ko=pać
 prze=ko=pać
