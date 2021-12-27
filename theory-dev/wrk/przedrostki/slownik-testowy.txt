@@ -11,3 +11,4 @@ przed=wiecz=ny
 # Liczenie ile słów tworzy
 ko=pać
 prze=ko=pać
+wiecz=ny
