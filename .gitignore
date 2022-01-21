@@ -1,5 +1,10 @@
-/*.egg-info/
-/build/
-/dist/
-/__pycache__/
+# Python
+*.egg-info/
+build/
+dist/
+__pycache__/
 *.pyc
+venv/
+
+# LibreOffice
+.~lock.*
