@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*.egg-info/
 /build/
 /dist/
@@ -5,3 +6,15 @@
 *.pyc
 
 .~lock.*
+=======
+# Python
+*.egg-info/
+build/
+dist/
+__pycache__/
+*.pyc
+venv/
+
+# LibreOffice
+.~lock.*
+>>>>>>> 40a36df2de4dde557e9f2429b42eb2ca8f43fdc7
