@@ -634,5 +634,5 @@
   "yę": ["",    "(j.)(ę)",   "",     "NUCLEUS", ""],
   "ią": ["",    "(~j)(ą)",   "",     "NUCLEUS", "piąstki, łąka, jojczyć, ijon, kijowska, poi"],
   "ją": ["",    "(j.)(ą)",   "",     "NUCLEUS", ""],
-  "yą": ["",    "(y|j.)(ą)", "",     "NUCLEUS", ""],
+  "yą": ["",    "(y|j.)(ą)", "",     "NUCLEUS", ""]
 }
