@@ -143,7 +143,7 @@
   "cht.":    ["ZKT-",   "cht",       "", "ONSET", "lewe CHT"],
   "chw.":    ["KTV-",   "chw",       "", "ONSET", "lewe CHW"],
   "chwi.":    ["KTVJ",   "chwi",       "", "ONSET", "lewe CHWI"],
-  "j."    ["J",   "j",       "", "ONSET", "lewe J"],
+  "j.":    ["J",   "j",       "", "ONSET", "lewe J"],
   "k.":    ["K-",   "k",       "", "ONSET", "lewe K"],
   "kc.":    ["ZKT-",   "kc",       "", "ONSET", "lewe KC"],
   "kci.":    ["ZKTJ",   "kci",       "", "ONSET", "lewe KCI"],
