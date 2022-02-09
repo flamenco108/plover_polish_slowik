@@ -4,7 +4,7 @@ import collections
 import json
 import os
 import re
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, TextIO, Tuple
 
 from cson import CommentRemover
 
@@ -28,6 +28,15 @@ def main():
                         help='wynikowy plik JSON do załadowania do Plovera')
     args = parser.parse_args()
 
+    # Upewnij się że foldery istnieją
+    for plik_wyjściowy in [args.teoria, args.log, args.slownik]:
+        folder = os.path.dirname(plik_wyjściowy)
+        if folder != '':
+            os.makedirs(folder, exist_ok=True)
+    # Spróbuj otworzyć plik logu
+    with open(args.log, 'w') as log_generatora:
+        log_generatora.write(f'Argumenty: {str(args)[10:-1]}\n')
+
     zasady = dict()
     linie_szablonu = []
     with open(args.teoria_szablon) as szablon_cson:
@@ -48,26 +57,21 @@ def main():
         try:
             zasady = json.load(zasady_json)
         except json.JSONDecodeError as e:
-            zasady_json.seek(0)
-            linie_json = zasady_json.readlines()
-            print('------------')
-            # lineno zaczyna się od 1
-            print(linie_json[e.lineno - 3], end='')
-            print(linie_json[e.lineno - 2], end='')
-            print(linie_json[e.lineno - 1], end='')
-            print(' '*(e.colno - 2), '^')
-            print(linie_json[e.lineno + 0], end='')
-            print(linie_json[e.lineno + 1], end='')
-            print('------------')
+            wyświetl_błąd_json(zasady_json, e)
             raise e
 
     # print(zasady)
 
     # Zmień słownik list na słownik obiektów
-    for id in zasady:
-        # Nazwy zmiennych zgodne z spectra_lexer/doc/rules_format.txt
-        keys, letters, alt, flags, info = tuple(zasady[id])
-        zasady[id] = Zasada(keys, letters, flags)
+    with open(args.log, 'a') as log_generatora:  # Otwórz w trybie a - append, żeby dopisywać
+        for id in zasady:
+            # Nazwy zmiennych zgodne z spectra_lexer/doc/rules_format.txt
+            keys, letters, alt, flags, info = tuple(zasady[id])
+            sformatowane_klawisze = połącz_klawisze(keys)
+            if sformatowane_klawisze != keys:
+                log_generatora.write(
+                    f'Klawisze szablonu: zmieniono "{keys}" na "{sformatowane_klawisze}"\n')
+            zasady[id] = Zasada(keys, letters, flags)
 
     zasady: Dict[str, Zasada]  # Informacja dla edytora kodu jaki to ma typ
 
@@ -130,14 +134,12 @@ def main():
             raise ValueError(
                 f'Nie udało się znaleźć klawiszy dla zasad: {", ".join(pozostałe)}')
 
-    os.makedirs(os.path.dirname(args.teoria), exist_ok=True)
     with open(args.teoria, 'w') as zasady_cson:
         zasady_cson.writelines(linie_szablonu)
 
     słownik_z_teorii = dict()
 
-    os.makedirs(os.path.dirname(args.log), exist_ok=True)
-    with open(args.log, 'w') as log_generatora:
+    with open(args.log, 'a') as log_generatora:
 
         for id, zasada in zasady.items():
             if not zasada.f_słownik:
@@ -184,7 +186,6 @@ def main():
 
     słownik_ze_słów = dict()
 
-    # Otwórz w trybie a - append, żeby dopisywać
     with open(args.log, 'a') as log_generatora:
         with open(args.slowa) as podzielone_słowa:
             for numer_linii, linia in enumerate(podzielone_słowa):
@@ -251,7 +252,7 @@ def main():
     słownik_całość.update(słownik_z_teorii)
 
     # Posortuj słowa według kolejności klawiszy
-    kolejność = '#XFZSKTPVLR-JE~*IAUCRLBSGTWOY/'
+    kolejność = '/#XFZSKTPVLR-JE~*IAUCRLBSGTWOY'
     słownik_całość = collections.OrderedDict(
         sorted(słownik_całość.items(), key=lambda wpis:
                [kolejność.index(k) for k in wpis[0]]))
@@ -259,7 +260,6 @@ def main():
     linie = [f'"{klawisze}": "{tekst}"'
              for klawisze, tekst in słownik_całość.items()]
 
-    os.makedirs(os.path.dirname(args.slownik), exist_ok=True)
     with open(args.slownik, 'w') as slownik:
         slownik.write('{\n' + ',\n'.join(linie) + '\n}')
 
@@ -272,7 +272,7 @@ class Zasada:
 
         # Wygeneruj wpis do słownika na tej podstawie
         self.f_słownik = 'DICT' in flagi
-        # Zasada tylko do używania w innych zasadach, pownna mieć ~ w id
+        # Zasada tylko do używania w innych zasadach, powinna mieć ~ w id
         self.f_referencyjna = 'REFERENCE' in flagi
         # Flaga UPPERCASE jest potrzebna żeby pogodzić generację słownika z lekserem dla literowania wielkich liter
         self.f_duże_litery = 'UPPERCASE' in flagi
@@ -282,7 +282,7 @@ class Zasada:
         self.f_śródgłos = 'NUCLEUS' in flagi
         self.f_wygłos = 'CODA' in flagi
 
-        # Uzupełniony tekst do słownika (self.litery ma inne zasady)
+        # Uzupełniony tekst do słownika (self.litery może odwoływać się do innych zasad)
         self.tekst = ''
         if not self.do_uzupełnienia():
             self.tekst = self.litery
@@ -324,8 +324,23 @@ def jest_pusta_zasada(zasady: Dict[Any, Zasada]) -> bool:
 
 
 def połącz_klawisze(*args: str) -> str:
+    """Łączy klawisze dwóch akordów. Jeśli klawisz pojawia się
+    przynajmniej w jednym z argumentów, to będzie w wyniku.
+
+    Dla danego zbioru klawiszy zawsze wygeneruje taki sam tekst.
+
+    Returns
+    -------
+    str
+        Klawisze steno w kolejności, rozdzielone '-' tylko jeśli to niezbędne
+
+    Raises
+    ------
+    ValueError
+        Jeżeli któryś z argumentów zawierał nierozpoznane znaki
+    """
     zestawy = list(args)
-    kolejność = '#XFZSKTPVLR-JE~*IAUcrlbgtsgtwoy'
+    kolejność = '#XFZSKTPVLR-JE~*IAUcrlbsgtwoy'
 
     indeksy = []
     for zestaw in zestawy:
@@ -345,17 +360,20 @@ def połącz_klawisze(*args: str) -> str:
     wynik = ''.join([kolejność[i] for i in indeksy])
     if re.search(r'[JE~*IAU]', wynik):  # Por. system.py IMPLICIT_HYPHEN_KEYS
         wynik = wynik.replace('-', '')
+    elif wynik.endswith('-'):
+        wynik = wynik.replace('-', '')  # Myślnik na końcu jest zbędny
+
     return wynik.upper()
 
 
 def wyciągnij_fragment_sylaby(zasady: Dict[str, Zasada], głosy: Dict[str, str], pozostałe_litery: str) -> Tuple[str, str]:
     klawisze_fragmentu = ''
     while True:
-        # Może być kilka niezależnych spółgłosek
-        # TODO: Zastanowić się co wtedy z kolejnością
-        # Na na razie Spectra Lexer nie rozpoznaje takich sylab, np. XZTA: zda
+        # FIXME: Kiedy wszystkie fragmenty będą zdefiniowane w teorii, zmienić pętlę na łapanie tylko jednego
+
         znaleziono_głos = False
-        głos_maks_dł = max([len(tekst) for tekst in głosy])
+        # Jeśli `głosy` nie ma żadnych wpisów, to maksymalna długość wynosi 0
+        głos_maks_dł = max([len(tekst) for tekst in głosy] + [0])
         maks_dł = min(len(pozostałe_litery), głos_maks_dł)
         for dł in reversed(range(1, maks_dł + 1)):
             if pozostałe_litery[:dł] in głosy:
@@ -367,6 +385,27 @@ def wyciągnij_fragment_sylaby(zasady: Dict[str, Zasada], głosy: Dict[str, str]
         if not znaleziono_głos:
             break
     return klawisze_fragmentu, pozostałe_litery
+
+
+def wyświetl_błąd_json(zasady_json: TextIO, błąd: json.JSONDecodeError):
+    """Oznacza graficznie miejsce wystąpienia błędu JSON
+    """
+    zasady_json.seek(0)
+    linie_json = zasady_json.readlines()
+    indeks_linii = błąd.lineno - 1  # lineno to linia w pliku więc zaczyna się od 1
+
+    print('------------')
+    if indeks_linii >= 2:
+        print(linie_json[indeks_linii - 2], end='')
+    if indeks_linii >= 1:
+        print(linie_json[indeks_linii - 1], end='')
+    print(linie_json[indeks_linii], end='')
+    print(' '*(błąd.colno - 2), '^---', błąd.msg)
+    if indeks_linii < len(linie_json) - 1:
+        print(linie_json[indeks_linii + 1], end='')
+    if indeks_linii < len(linie_json) - 2:
+        print(linie_json[indeks_linii + 2], end='')
+    print('------------')
 
 
 if __name__ == '__main__':
