@@ -5,7 +5,7 @@
   # TODO: JĘZYK: Dać przykłady w info, por. samogłoski poniżej
   "b.":    ["XP",   "b",              "", "ONSET", "lewe B"],
   "c.":    ["ZT",   "c",              "", "ONSET", "lewe C"],
-  "ci.":   ["",     "(c.)(i)",        "", "ONSET", "lewe CI"],
+  "ci.":   ["",     "(c.)(j.)",        "", "ONSET", "lewe CI"],
   "cj.":   ["",     "(c.)(j.)",       "", "ONSET", "lewe CJ"],
   "cz.":   ["PV",   "cz",             "", "ONSET", "lewe CZ"],
   "ć.":    ["TJ",   "ć",              "", "ONSET", "lewe Ć"],
