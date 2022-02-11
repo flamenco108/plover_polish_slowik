@@ -26,7 +26,7 @@
   "bzd.":    ["XZTP",   "(bz.)(d|t.)",       "", "ONSET", "bzdura"],
   "bzdr.":    ["XZTPR",   "(bzd.)(r.)",       "", "ONSET", "u=bzdryngolić"],
   "bźdz.":    ["XZTP",   "bźdz",       "", "ONSET", "lewe BŹDZ"],
-  "bździ.":    ["XZTP",   "(bźdz.)(i.)",       "", "ONSET", "bździna, bździ"],
+  "bździ.":    ["XZTP",   "(bźdz.)(|~i+)",       "", "ONSET", "bździna, bździ"],
   "bźdź.":    ["XZTP",   "(bźdz.)(~j)",       "", "ONSET", "BŹDŹ (rozkazujący)"],
   "bżdż.":    ["XZTPV",   "bżdż",       "", "ONSET", "bżdżę"],
   "c.":    ["ZT",   "c",       "", "ONSET", "cywilizacja, centrum"],
