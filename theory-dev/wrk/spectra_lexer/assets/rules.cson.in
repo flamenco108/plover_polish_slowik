@@ -25,15 +25,9 @@
   "bzi.":    ["XZPJ",   "(bz.)(~j)",       "", "ONSET", "bzik"],
   "bzd.":    ["XZTP",   "(bz.)(d|t.)",       "", "ONSET", "bzdura"],
   "bzdr.":    ["XZTPR",   "(bzd.)(r.)",       "", "ONSET", "u=bzdryngolić"],
-<<<<<<< HEAD
-  "bźdz.":    ["XZTP",   "bźdz",       "", "ONSET", "lewe BŹDZ"],
-  "bździ.":    ["XZTP",   "(bźdz.)(|~i+)",       "", "ONSET", "bździna, bździ"],
-  "bźdź.":    ["XZTP",   "(bźdz.)(~j)",       "", "ONSET", "BŹDŹ (rozkazujący)"],
-=======
   "bźdz.":    ["XZTP",   "bźdz",       "", "ONSET", "BŹDZ- samodzielnie nie występuje"],
   "bździ.":    ["XZTP",   "(bździ|bźdz.)",       "", "ONSET", "BŹDZI- jak bździna, bździ"],
   "bźdź.":    ["XZTP",   "(bźdź|bździ.)",       "", "ONSET", "BŹDŹ- (rozkazujący?)"],
->>>>>>> 0b9202d04566577b6a81ee79cd00d80bd51b6133
   "bżdż.":    ["XZTPV",   "bżdż",       "", "ONSET", "bżdżę"],
   "c.":    ["ZT",   "c",       "", "ONSET", "cywilizacja, centrum"],
   "ckl.":    ["ZKTL",   "(c.)(k.)(l.)",       "", "ONSET", "ckliwy"],
