@@ -198,23 +198,14 @@ def main():
                 klawisze_słowa = []
                 nierozłożona_sylaba = False
                 for sylaba in sylaby:
-                    pozostałe_litery = sylaba
-
-                    klawisze_nagłosu, pozostałe_litery = wyciągnij_fragment_sylaby(
-                        zasady, nagłosy, pozostałe_litery)
-                    klawisze_śródgłosu, pozostałe_litery = wyciągnij_fragment_sylaby(
-                        zasady, śródgłosy, pozostałe_litery)
-                    klawisze_wygłosu, pozostałe_litery = wyciągnij_fragment_sylaby(
-                        zasady, wygłosy, pozostałe_litery)
-                    klawisze_sylaby = połącz_klawisze(
-                        klawisze_nagłosu, klawisze_śródgłosu, klawisze_wygłosu)
-
-                    if len(pozostałe_litery) > 0:
-                        log_generatora.write(
-                            f'Nie znaleziono rozkładu dla sylaby "{sylaba}" słowa "{linia}"\n')
-                        nierozłożona_sylaba = True
-                    else:
+                    try:
+                        klawisze_sylaby = rozłóż_sylabę(
+                            zasady, nagłosy, śródgłosy, wygłosy, sylaba)
                         klawisze_słowa.append(klawisze_sylaby)
+                    except ValueError as e:
+                        log_generatora.write(
+                            f'Nie znaleziono rozkładu dla sylaby "{sylaba}" słowa "{linia}": {e.args[0]}\n')
+                        nierozłożona_sylaba = True
 
                 if not nierozłożona_sylaba:
                     tekst = ''.join(sylaby)
@@ -366,25 +357,33 @@ def połącz_klawisze(*args: str) -> str:
     return wynik.upper()
 
 
-def wyciągnij_fragment_sylaby(zasady: Dict[str, Zasada], głosy: Dict[str, str], pozostałe_litery: str) -> Tuple[str, str]:
-    klawisze_fragmentu = ''
-    while True:
-        # FIXME: Kiedy wszystkie fragmenty będą zdefiniowane w teorii, zmienić pętlę na łapanie tylko jednego
+def rozłóż_sylabę(zasady: Dict[str, Zasada], nagłosy: Dict[str, str],
+                  śródgłosy: Dict[str, str], wygłosy: Dict[str, str], sylaba) -> str:
+    samogłoski = re.compile(r'[aąeęioóuy]+')
+    m = samogłoski.search(sylaba)
+    if not m:
+        raise ValueError('sylaba bez samogłosek')
+    nagłos = re.split(samogłoski, sylaba)[0]
+    śródgłos = m.group(0)
+    wygłos = re.split(samogłoski, sylaba)[1]
 
-        znaleziono_głos = False
-        # Jeśli `głosy` nie ma żadnych wpisów, to maksymalna długość wynosi 0
-        głos_maks_dł = max([len(tekst) for tekst in głosy] + [0])
-        maks_dł = min(len(pozostałe_litery), głos_maks_dł)
-        for dł in reversed(range(1, maks_dł + 1)):
-            if pozostałe_litery[:dł] in głosy:
-                klawisze_fragmentu = połącz_klawisze(
-                    klawisze_fragmentu, zasady[głosy[pozostałe_litery[:dł]]].klawisze)
-                pozostałe_litery = pozostałe_litery[dł:]
-                znaleziono_głos = True
-                break
-        if not znaleziono_głos:
-            break
-    return klawisze_fragmentu, pozostałe_litery
+    # Wykryj "i" które tylko zmiękcza, przesuń je do nagłosu
+    if len(śródgłos) > 1 and śródgłos.startswith('i'):
+        nagłos = nagłos + śródgłos[0]
+        śródgłos = śródgłos[1:]
+
+    if nagłos != '' and (nagłos not in nagłosy):
+        raise ValueError(f'brak definicji ONSET dla "{nagłos}"')
+    if śródgłos != '' and (śródgłos not in śródgłosy):
+        raise ValueError(f'brak definicji NUCLEUS dla "{śródgłos}"')
+    if wygłos != '' and (wygłos not in wygłosy):
+        raise ValueError(f'brak definicji CODA dla "{wygłos}"')
+
+    return połącz_klawisze(
+        (zasady[nagłosy[nagłos]].klawisze if nagłos != '' else ''),
+        (zasady[śródgłosy[śródgłos]].klawisze if śródgłos != '' else ''),
+        (zasady[wygłosy[wygłos]].klawisze if wygłos != '' else '')
+    )
 
 
 def wyświetl_błąd_json(zasady_json: TextIO, błąd: json.JSONDecodeError):
