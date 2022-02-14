@@ -76,7 +76,6 @@
   "dni.":         ["XTLRJ",       "(dn.)(~j)",                "", "ONSET",              "DNI- zmiękczone DN- jak dnie, dni"],
   "dr.":          ["XTR",         "(d.)(r.)",                 "", "ONSET",              "DR- jak drań, drugi"],
   "drg.":         ["XKTR",        "drg",                      "", "ONSET",              "DRG- wspólne X udźwięcznia D i G"],
->>>>>>> 37d71cf (Ułożenie ONSETów w rules.cson.in w kolumny)
   # oryginał Trillo zanotowane w ods: XKTVLR
   "drgn.":        ["XKTLR",       "drgn",                     "", "ONSET",              "DRGN- nie ma DGN, więc nie ma problemu"],
   "drgni.":       ["XKTLRJ",      "(drgn.)(~j)",              "", "ONSET",              "DRGNI- zmiękczone DRGN-"],
