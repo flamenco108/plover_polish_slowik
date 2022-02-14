@@ -1,0 +1,20 @@
+"zasada": ["ZA/SA/XTA",   "zasa(d.)a",   "alt"   "FLAGA"   "Info - objaśnienie"]
+
+# Flagi (pole drugie od prawej) ###
+ONSET - nagłos
+CODA - wygłos
+NUCLEUS - śródgłos (głos)
+INVERSION - odwrotna kolejność klawiszy wobec liter
+RARE
+REFERENCE
+SPLIT
+STROKE
+WORD - ta reguła zawiera kompletne słowo
+DICT
+UPPERCASE
+
+
+# Tekst, któremu odpowiada dana zasada ####
+~LIT
+~ALT
+~DUŻ
