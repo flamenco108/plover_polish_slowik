@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+#<<<<<<< HEAD
 # Python
 *.egg-info/
 build/
@@ -17,4 +17,4 @@ venv/
 *.pyc
 
 .~lock.*
->>>>>>> 0a19c7b (Add script for removing words built with a prefix)
+#>>>>>>> 0a19c7b (Add script for removing words built with a prefix)
