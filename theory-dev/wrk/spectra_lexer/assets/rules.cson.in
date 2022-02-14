@@ -193,7 +193,7 @@
   "gdzi.":        ["XZKTJ",       "(gdz.)(~j)",               "", "ONSET",              "GDZI- zmiękczone GDZ- czyli GDZI- jak gdzie"],
   "gl.":          ["XKL",         "(g.)(l.)",                 "", "ONSET",              "GL- jak glut, glan"],
   "gł.":          ["XKLJ",        "(g.)(ł|l.)(|~j)",          "", "ONSET",              "GŁ- jak głąb, głębia, gładź"],
-  "gli.":         ["XKLJ",        "(gli|gł.)",                "", "ONSET",              "GLI- jak gliacyna, gliceryna, gliocyt"],
+  "gli.":         ["XKLJ",        "(g.)(l.)(~j)",                "", "ONSET",              "GLI- jak gliacyna, gliceryna, gliocyt"],
   "gm.":          ["XKTV",        "(g.)(m.)",                 "", "ONSET",              "GM- jak gmach, gmerać"],
   "gmi.":         ["XKTVJ",       "(g.)(m.)(~j)",             "", "ONSET",              "GMI- jak gmina"],
   "gn.":          ["XKLR",        "(g.)(n.)",                 "", "ONSET",              "GN- jak gnać"],
