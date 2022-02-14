@@ -25,9 +25,15 @@
   "bzi.":    ["XZPJ",   "(bz.)(~j)",       "", "ONSET", "bzik"],
   "bzd.":    ["XZTP",   "(bz.)(d|t.)",       "", "ONSET", "bzdura"],
   "bzdr.":    ["XZTPR",   "(bzd.)(r.)",       "", "ONSET", "u=bzdryngolić"],
+<<<<<<< HEAD
   "bźdz.":    ["XZTP",   "bźdz",       "", "ONSET", "lewe BŹDZ"],
   "bździ.":    ["XZTP",   "(bźdz.)(|~i+)",       "", "ONSET", "bździna, bździ"],
   "bźdź.":    ["XZTP",   "(bźdz.)(~j)",       "", "ONSET", "BŹDŹ (rozkazujący)"],
+=======
+  "bźdz.":    ["XZTP",   "bźdz",       "", "ONSET", "BŹDZ- samodzielnie nie występuje"],
+  "bździ.":    ["XZTP",   "(bździ|bźdz.)",       "", "ONSET", "BŹDZI- jak bździna, bździ"],
+  "bźdź.":    ["XZTP",   "(bźdź|bździ.)",       "", "ONSET", "BŹDŹ- (rozkazujący?)"],
+>>>>>>> 0b9202d (Poprawki w rules.cson.in 02)
   "bżdż.":    ["XZTPV",   "bżdż",       "", "ONSET", "bżdżę"],
   "c.":    ["ZT",   "c",       "", "ONSET", "cywilizacja, centrum"],
   "ckl.":    ["ZKTL",   "(c.)(k.)(l.)",       "", "ONSET", "ckliwy"],
@@ -127,7 +133,7 @@
   "grz.":    ["XKRJ",   "(g.)(rz.)",       "", "ONSET", "GRZ- jak grzebień, grzyb"],
   "grzb.":    ["XKPRJ",   "grzb",       "", "ONSET", "GRZB- wspólne X dla G i B jak grzbiet"],
   "grzd.":    ["XKTRJ",   "grzd",       "", "ONSET", "GRZD- wspólne X dla G i D jak grzdyl (rzadkie)"],
-  "grzm.":    ["XKTVRJ",   "(g.)(rz.)(m.)(|~j)",       "", "ONSET INVERSION", "GRZM- jak grzmot ALE i grzmieć"],
+  "grzm.":    ["XKTVRJ",   "(g.)(rz.)(m.)",       "", "ONSET INVERSION", "GRZM- jak grzmot ALE i grzmieć"],
   "gw.":    ["XKV",   "(g.)(w.)",       "", "ONSET", "lewe GW"],
   "gwd.":    ["XZKTV",   "gwd",       "", "ONSET", "lewe GWD"],
   "gwdz.":    ["XZKTVJ",   "(gwdz|gwdzi.)",       "", "ONSET", "lewe GWDZ"],
