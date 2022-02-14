@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Python
 *.egg-info/
 build/
@@ -8,3 +9,12 @@ venv/
 
 # LibreOffice
 .~lock.*
+=======
+/*.egg-info/
+/build/
+/dist/
+/__pycache__/
+*.pyc
+
+.~lock.*
+>>>>>>> 0a19c7b (Add script for removing words built with a prefix)
