@@ -1,0 +1,8 @@
+Stworzyć mnemotechnikę dla zapamiętania układu klawiatury
+
+  #   left:   XFZSKTPVLR
+Xawery Faktycznie Zepsuł Sobie Komputer. Teraz Patrzy V Lustro, Rozmyśla
+  #   center: JE~*IAU
+Jaki Elegant TYL(da)ko GWIAZDA I AUtobus
+  #   right:  CRLBSGTWOY
+Czy Raczej

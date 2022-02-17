@@ -1,0 +1,29 @@
+## Brakujące słowa w słowniku wynikowym
+Otóż ćwiczę różne słówka i w ten sposób wpadłem na to, że skrypt `generuj_slownik.py` chyba nie generuje kompletnego słownika. Użyłem komendy:
+```
+python3 generuj_slownik.py --slowa ../../data/100K-sylabizowane --slownik wyniki/slownik-100K.json && \
+spectra_lexer index --keymap=assets/key_layout.cson --rules=wyniki/rules.cson --board-defs=assets/board_defs.cson --translations=wyniki/slownik-100K.json --index=wyniki/index.json && \
+spectra_lexer http --http-port=8888 --keymap=assets/key_layout.cson --rules=wyniki/rules.cson --board-defs=assets/board_defs.cson --translations=wyniki/slownik-100K.json --index=wyniki/index.json
+```
+Jakby brakowało niektórych słów. I to sporo słów.
+```
+flamenco@szmirlap:~/git/plover_polish_slowik/theory-dev/wrk/spectra_lexer$ cat ../../data/100K.txt | grep ^mierzy
+mierzy
+mierzyć
+mierzyli
+mierzył
+mierzyła
+mierzyły
+mierzymy
+flamenco@szmirlap:~/git/plover_polish_slowik/theory-dev/wrk/spectra_lexer$ cat wyniki/slownik-100K.json | grep mierzy
+"U/STVJE/RJEUTO": "uśmierzyć",
+```
+Ile brakuje?
+```
+flamenco@szmirlap:~/git/plover_polish_slowik/theory-dev/wrk/spectra_lexer$ wc -l ../../data/100K.txt
+131168 ../../data/100K.txt
+flamenco@szmirlap:~/git/plover_polish_slowik/theory-dev/wrk/spectra_lexer$ wc -l wyniki/slownik-100K.json
+103191 wyniki/slownik-100K.json
+```
+ok. 27%?
+Co mu nie pasuje?
