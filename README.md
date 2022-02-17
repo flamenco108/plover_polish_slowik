@@ -22,11 +22,17 @@ So it was left for me to develop a plugin that could be added to the Plover reso
 
 To install from locally cloned git repository, you can run the following command:
 
-```owershell
+### Install on Windows
 
-    <path-to-plover>\plover_console.exe -s plover_plugins install <path-to-plugin>
+```Powershell
 
+    cd "<path-to-plover-plugin>"
+    "<path-to-plover*>\plover_console.exe" -s plover_plugins install -e .
+    
+    *"C:\Program Files\Open Steno Project\Plover 4.0.0.dev9+65.gdf65bf1\plover_console.exe"
 ```
+
+### Install on Linux
 
 ```bash
 
