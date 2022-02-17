@@ -24,7 +24,7 @@ To install from locally cloned git repository, you can run the following command
 
 ```owershell
 
-    .\plover_console.exe -s plover_plugins install <path-to-plugin>
+    <path-to-plover>\plover_console.exe -s plover_plugins install <path-to-plugin>
 
 ```
 
