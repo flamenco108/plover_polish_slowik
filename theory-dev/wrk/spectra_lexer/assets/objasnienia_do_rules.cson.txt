@@ -18,3 +18,15 @@ UPPERCASE
 ~LIT
 ~ALT
 ~DUŻ
+
+; "xx"   = vowel keys in center
+; "xx."  = keys on left side
+; ".xx"  = keys on right side
+; ".xx." = non-vowel keys near center
+; "xx-"  = independent prefix stroke
+; "-xx"  = independent suffix stroke
+; "xx+"  = resolves key name conflicts
+; "xx!"  = soft variants of consonants, long variants of vowels
+; "xx*"  = orthographic rule
+; "xx~"  = for internal use only, should not appear in top level of parsing output
+; "X:xx" = determines purpose of keys that don't contribute to the letters in the word
