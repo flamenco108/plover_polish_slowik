@@ -1,0 +1,1 @@
+"C:\Program Files\Open Steno Project\Plover 4.0.0.dev9+65.gdf65bf1\plover_console.exe" -s plover_plugins install "D:\Flamenco\GitHub\plover_polish_slowik"
