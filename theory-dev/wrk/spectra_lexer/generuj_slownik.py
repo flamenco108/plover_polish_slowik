@@ -55,7 +55,8 @@ def main():
         #     print(f'{i}\t{linia}', end='')
         # zasady_json.seek(0)
         try:
-            zasady = json.load(zasady_json)
+            zasady = json.load(zasady_json,
+                               object_pairs_hook=wykryj_duplikaty_json)
         except json.JSONDecodeError as e:
             wyświetl_błąd_json(zasady_json, e)
             raise e
@@ -297,8 +298,8 @@ def uzupełnij_tekst(zasady: Dict[str, Zasada], id: str) -> None:
         if not m:
             break
         # Obsługa składni: (litery|id), wstaw litery
-        podmiana = m.group(1).split('|')[0] \
-            if '|' in m.group(1) else zasady[m.group(1)].litery
+        podmiana = (m.group(1).split('|')[0] if '|' in m.group(1)
+                    else zasady[m.group(1)].litery)
         tekst = tekst[:m.start()] + podmiana + tekst[m.end():]
 
     if zasada.f_duże_litery:
@@ -405,6 +406,18 @@ def wyświetl_błąd_json(zasady_json: TextIO, błąd: json.JSONDecodeError):
     if indeks_linii < len(linie_json) - 2:
         print(linie_json[indeks_linii + 2], end='')
     print('------------')
+
+
+def wykryj_duplikaty_json(klucz_wartość: list) -> dict:
+    d = {}
+    for k, w in klucz_wartość:
+        if k in d:
+            raise ValueError(
+                f'Duplikat klucza JSON `{k}`: '
+                f'"{w}", już jest "{d[k]}"')
+        else:
+            d[k] = w
+    return d
 
 
 if __name__ == '__main__':
