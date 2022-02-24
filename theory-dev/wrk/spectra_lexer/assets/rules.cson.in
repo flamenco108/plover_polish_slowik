@@ -213,7 +213,7 @@
   "lw.":          ["VL",          "(l.)(w.)",                       "", "ONSET INVERSION",              "LW- jak lwa"],
   "lwi.":         ["VLJ",         "(lw.)(~j)",                      "", "ONSET",              "LWI- jak lwie"],
   "lż.":          ["TPL",         "(l.)(ż|sz.)",                       "", "ONSET INVERSION",              "LŻ- jak lżyć"],
-  "ł.":           ["LJ",          "(l.)(~j)",                        "", "ONSET",              "Ł- jak łapać, łykać"],
+  "ł.":           ["LJ",          "(ł|l.)(|~j)",                        "", "ONSET",              "Ł- jak łapać, łykać"],
   "łb.":          ["XPLJ",        "(ł.)(b.)",                       "", "ONSET INVERSION",              "ŁB- jak łba"],
   "łbi.":         ["XPLJ",        "(łbi|łb.)",                      "", "ONSET",              "ŁBI- jak łbie"],
   "łg.":          ["XKLJ",        "(ł.)(g.)",                       "", "ONSET INVERSION",              "ŁG- jak łgać"],
@@ -1065,7 +1065,7 @@
   "i":  ["I",   "i",         "",     "NUCLEUS", "`i` jak `bila`"],
   # TODO: JĘZYK: Dostosować info dla pozostałych samogłosek
   "a":  ["A",   "a",         "",     "NUCLEUS", "bal"],
-  "ai":  ["ACR",   "(a)(.j)",         "",     "NUCLEUS", "AI jak aids"],
+  "ai":  ["ACR",   "(a)(i|.j)",         "",     "NUCLEUS", "AI jak aids"],
   "u":  ["U",   "u",         "",     "NUCLEUS", ""],
   "ó":  ["U",   "ó",         "",     "NUCLEUS", "ból"],
   "o":  ["AU",  "o",         "",     "NUCLEUS", "bok"],
