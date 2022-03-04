@@ -251,12 +251,12 @@ def podziel_klawisze(klawisze_plover: str) -> Klw:
     klawisze = (klawisze[0], klawisze[1].replace('-', ''), klawisze[2])
 
     # Usuwa duplikaty i sortuje
-    kolejność = klawiatura_lewa + klawiatura_środek + klawiatura_prawa.upper()
+    kolejność = klawiatura_lewa + klawiatura_środek + klawiatura_prawa
     klawisze = tuple([
-        ''.join([kolejność[i]
+        ''.join([kolejność[i].upper()
                 for i in sorted(list(set(kolejność.index(k)
                                          for k in strona)))])
-        for strona in klawisze])
+        for strona in (klawisze[0], klawisze[1], klawisze[2].lower())])
     return klawisze
 
 
