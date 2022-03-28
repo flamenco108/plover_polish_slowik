@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
+import random
 import argparse
 import collections
-import json
 import os
 import re
 from typing import Any, Dict, TextIO, Tuple
 
-# from cson import CommentRemover
 
 class Logger:
     def __init__(self, plik_logowania, rozmiar_bufora=1024, pisz_na_ekran=True):
@@ -33,6 +32,7 @@ class Logger:
         if self.pisz_na_ekran:
             print(f"ERR: {dane}")
 
+
 class DyspozytorKlawiszy:
     def __init__(self, log, zasady):
         self.log = log
@@ -57,7 +57,7 @@ class DyspozytorKlawiszy:
             elif zasada.f_wygłos:
                 self.wygłosy[zasada.tekst] = zasada.id
 
-    def klawisze_dla_sylaby(self, sylaba: str) -> str:
+    def klawisze_dla_sylaby(self, sylaba: str):
         if not sylaba in self._klawisze_dla_sylaby.keys():
             self.rozłóż_sylabę(sylaba)
         return self._klawisze_dla_sylaby[sylaba]
@@ -85,11 +85,202 @@ class DyspozytorKlawiszy:
         if wygłos != '' and (wygłos not in self.wygłosy):
             raise ValueError(f'brak definicji CODA dla "{wygłos}"')
 
-        self._klawisze_dla_sylaby[sylaba] = połącz_klawisze(
-            (self.zasady[self.nagłosy[nagłos]].klawisze if nagłos != '' else ''),
+        self._klawisze_dla_sylaby[sylaba] = ((self.zasady[self.nagłosy[nagłos]].klawisze if nagłos != '' else ''),
             (self.zasady[self.śródgłosy[śródgłos]].klawisze if śródgłos != '' else ''),
             (self.zasady[self.wygłosy[wygłos]].klawisze if wygłos != '' else ''))
         self.log.debug(f"klawisze dla sylaby: {sylaba} zdefiniowane")
+
+
+class PalcoKombinator():
+    def __init__(self, log, zasady):
+        self.palce = dict()
+        # X: ch
+        self.palce["LMały"] = ("XZFS", "XF", "ZS", "XZ", "FS", "X", "F", "Z", "S")
+        self.palce["LSerdeczny"] = ("KT", "K", "T")
+        self.palce["LŚrodkowy"] = ("PV", "P", "V")
+        self.palce["LWskazujący"] = ("LR", "L~", "R*", "L", "R", "~", "*", "~*", "LR~*")
+        self.palce["LKciuk"] = ("JE", "EI", "J", "E", "I")
+        self.palce["PKciuk"] = ("IA", "AU", "I", "A", "U")
+        # CR: j
+        self.palce["PWskazujący"] = ("CR", "~C", "*R", "~", "*", "C", "R", "~*", "CR~*")
+        # LB: ł
+        self.palce["PŚrodkowy"] = ("LB", "L", "B")
+        self.palce["PSerdeczny"] = ("SG", "S", "G")
+        # TW: ą,ć; W: f; TO: a; TOWY: e; OY: ę; WY: i
+        self.palce["PMały"] = ("TOWY", "OY", "TO", "WY", "TW", "T", "W", "O", "Y")
+        self.nazwy_palców = ["LMały", "LSerdeczny", "LŚrodkowy", "LWskazujący", "LKciuk", "PKciuk", "PWskazukący", "PŚrodkowy", "PSerdeczny", "PMały"]
+
+    def wykombinuj(self, zważone_sylaby, limit_prób):
+        kombinacje = []
+        ilość_sylab = len(zważone_sylaby)
+        while limit_prób > 0:
+            limit_prób -= 1
+            zważone_klawisze = self._zważ_klawisze(zważone_sylaby[0])
+            pożądane_klawisze = zważone_klawisze.clone()
+            palce = ["LWskazujący", "LŚrodkowy", "LSerdeczny", "LMały", "LKciuk", "PKciuk", "PWskazukący", "PŚrodkowy", "PSerdeczny", "PMały"]
+            (kombinacja, niedopasowanie) = self._dodaj_klawisze_wg_palców(palce, pożądane_klawisze)
+            if ilość_sylab == 1:
+                kombinacje.append((kombinacja, niedopasowanie))
+                continue
+            zważone_klawisze = self._zważ_klawisze(zważone_sylaby[-1])
+            pożądane_klawisze = zważone_klawisze.clone()
+            palce = ["PWskazujący", "PŚrodkowy", "PSerdeczny", "PMały", "PKciuk", "LKciuk", "LWskazukący", "LŚrodkowy", "LSerdeczny", "LMały"]
+            (kombinacja, niedopasowanie) = self._dodaj_klawisze_wg_palców(palce, pożądane_klawisze)
+            if ilość_sylab == 2:
+                # TODO: trzeba dopisać do nowe klawisze do istniejącej rozpoczętej kombinacji
+                kombinacje.append((kombinacja, niedopasowanie))
+                continue
+            zważone_klawisze = self._zważ_klawisze(zważone_sylaby[1:-1])
+            pożądane_klawisze = zważone_klawisze.clone()
+            palce = self.nazwy_palców.clone()
+            random.shuffle(palce)
+            (kombinacja, niedopasowanie) = self._dodaj_klawisze_wg_palców(palce, pożądane_klawisze)
+            kombinacje.append((kombinacja, niedopasowanie))
+            if "R" in kombinacja and ("L" in kombinacja or "C" in kombinacja):
+                kombinacje.append((kombinacja+"~*", niedopasowanie + 2))
+            elif "R" in kombinacja and "C" not in kombinacja):
+                kombinacje.append((kombinacja+"*", niedopasowanie + 1))
+            elif "R" not in kombinacja and (("L" in kombinacja and "B" not in kombinacja) or "C" in kombinacja):
+                kombinacje.append((kombinacja+"~", niedopasowanie + 1))
+        return kombinacje
+
+    def _zważ_klawisze(self, zważone_sylaby):
+        zważone_klawisze = collections.defaultdict(lambda: 0)
+        kombinacje = []
+        for (sylaba, ((nagłos, n_waga),
+                      (śródgłos, ś_waga),
+                      (wygłos, w_waga))) in zważone_sylaby:
+            for klawisz in nagłos:
+                zważone_klawisze[klawisz] += n_waga
+            for klawisz in śródgłos:
+                zważone_klawisze[klawisz] += ś_waga
+            for klawisz in wygłos:
+                zważone_klawisze[klawisz] += w_waga
+        return zważone_klawisze
+
+    def _dodaj_klawisze_wg_palców(self, palce, zważone_klawisze, priorytetowe_klawisze=""):
+        kombinacja = ""
+        pożądane_klawisze = priorytetowe_klawisze.clone()
+        for palec in palce:
+            for kombo in self.palce[palec]
+                wszystkie_użyte = True
+                for klawisz in kombo:
+                    if klawisz not in pożądane_klawisze:
+                        wszystkie_użyte = False
+                        break
+                if wszystkie_użyte:
+                    kombinacja += kombo
+                    for klawisz in kombo:
+                        pożądane_klawisze.pop(klawisz)
+                    break
+            if len(pożądane_klawisze.keys()) == 0:
+                break
+        niedopasowanie = 0
+        for ile_brakuje in pożądane_klawisze.values()
+            niedopasowanie += ile_brakuje
+        return (kombinacja, niedopasowanie)
+
+
+def Ważniak():
+    def __init__(self):
+        self.wagi_pierwszej_sylaby = (2, 1, 1)
+        self.wagi_ostatniej_sylaby = (1, 1, 2)
+        self.wagi_środkowej_sylaby = (1, 0, 1)
+        self.extra_wagi_akcentowanej_sylaby = (1, 1, 0)
+    def zważ_sylaby(self, sylaby):
+        zważone_sylaby = []
+        ilość_sylab = len(sylaby)
+        (sylaba, (nagłos, śródgłos, wygłos))) = sylaby[0]
+        zważona = (sylaba, ((nagłos, self.wagi_pierwszej_sylaby[0]),
+                  (śródgłos, self.wagi_pierwszej_sylaby[1]),
+                   (wygłos, self.wagi_pierwszej_sylaby[2])))
+        zważone_sylaby.append(zważona)
+        zważona = None
+        if ilość_sylab == 1:
+            return zważone_sylaby
+        if ilość_sylab == 2:
+            (sylaba, (nagłos, śródgłos, wygłos))) = sylaby[-1]
+             zważona = (sylaba, ((nagłos, self.wagi_ostatniej_sylaby[0]),
+                    (śródgłos, self.wagi_ostatniej_sylaby[1]),
+                    (wygłos, self.wagi_ostatniej_sylaby[2])))
+             zważone_sylaby.append(zważona)
+             return zważone_sylaby
+        for (sylaba, (nagłos, śródgłos, wygłos))) in sylaby[1:-1]:
+            zważona = (sylaba, ((nagłos, self.wagi_środkowej_sylaby[0]),
+                                (śródgłos, self.wagi_środkowej_sylaby[1]),
+                                (wygłos, self.wagi_środkowej_sylaby[2])))
+            zważone_sylaby.append(zważona)
+        (sylaba, ((nagłos, n_waga), (śródgłos, ś_waga), (wygłos, w_waga)))) = sylaby[-2]
+         doważona = (sylaba, ((nagłos, n_waga + self.wagi_akcentowanej_sylaby[0]),
+                        (śródgłos, ś_waga + self.wagi_akcentowanej_sylaby[1]),
+                        (wygłos, w_waga + self.wagi_akcentowanej_sylaby[2])))
+         zważone_sylaby[-2] = doważona
+         return zważone_sylaby
+
+            
+class Generator():
+    def __init__(self, log, słownik_ostateczny):
+        self.log = log
+        self.palco_komb = PalcoKombinator()
+        self.ważniak = Ważniak()
+        # {tekst: {"Kombinacja": niedopasowanie}}
+        self.słownik = słownik_ostateczny
+        self.kombinacje = dict()
+        self._zainicjalizuj_kombinacje()
+        self.loguj_postęp_co = 100 # Będzie log po tylu wygenerowanych słowach
+        self.postęp = 0
+        self.minimum_kombinacji_per_słowo = 4
+
+    def _zainicjalizuj_kombinacje(self):
+        self.log("Inicjalizuję bazę generatora")
+        for (tekst, kombinacje) in self.słownik:
+            for kombinacja in kombinacje.keys():
+                self.kombinacje[kombinacja] = tekst
+        self.log("Baza zainicjalizowana w pamięci")
+
+    def _dopasuj_kombinacje(tekst, kombinacje):
+        for (kombinacja, niedopasowanie) in kombinacje:
+            obecny_właściciel = None
+            if kombinacja in self.kombinacje.keys():
+                obecny_właściciel = self.kombinacje[kombinacja]
+                if obecny_właściciel == tekst:
+                    continue
+                kombinacje_właściciela = self.słownik(obecny_właściciel)
+                ilość_kombinacji_właściciela = len(kombinacje_właściciela.keys())
+                if ilość_kombinacji_właściciela <= self.minimum_kombinacji_per_słowo:
+                    continue
+                else:
+                    obecne_niedopasowanie = kombinacje_właściciela[kombinacja]
+                    minimalne_niedopasowanie_u_właściciela = obecne_niedopasowanie
+                    for obca_kominacja, obce_niedopasowanie in kombinacje_właściciela.items():
+                        if obce_niedopasowanie < minimalne_niedopasowanie_u_właściciela:
+                            minimalne_niedopasowanie_u_właściciela = obce_niedopasowanie
+                            break
+                        elif obce_niedopasowanie == minimalne_niedopasowanie_u_właściciela and\
+                             obca_kombinacja != kombinacja:
+                            minimalne_niedopasowanie_u_właściciela = obce_niedopasowanie -1
+                            break
+                    if obecne_niedopasowanie > minimalne_niedopasowanie_u_właściciela:
+                        kombinacje_właściciela.pop(kombinacja)
+                        self.słownik(obecny_właściciel) = kombinacje_właściciela
+                        self.słownik(tekst)[kombinacja] = niedopasowanie
+                        self.kombinacje[kombinacja] = tekst
+                
+    def wygeneruj_kombinacje((tekst, sylaby), limit_prób=100):
+        self.postęp += 1
+        zważone_sylaby = self.ważniak.zważ_sylaby(sylaby)
+        kombinacje = self.palco_komb.wykombinuj(zważone_sylaby, limit_prób)
+        self._dopasuj_kombinacje(tekst, kombinacje)
+            
+        if self.postęp % self.loguj_postęp_co == 0:
+            log.info(f"{self.postęp}: {tekst} - wygenerowano")
+
+    # Ponieważ sortowanie może trochę zająć, warto zapisać co już mamy
+    # w razie gdyby skończył się zapas RAMu
+    def generuj_do_pliku():
+        for (tekst, kombinacje) in self.słownik:
+            for (kombinacja, niedopasowanie) in kombinacje:
+                yield f'"{kombinacja}": "{tekst}"\n'
 
 
 def main():
@@ -141,62 +332,10 @@ def main():
             obcięta_linia.startswith('}'):
             continue
         log.info(f"Parsuję linię {numer_linii}: {obcięta_linia}")
-        # (id_zasady, atrybuty_zasady) = obcięta_linia.split(':')
         (id_zasady, klawisze, litery, alt, flagi, info) = czytaj_znaki_między_cudzysłowem(obcięta_linia)
-        # ponownie_obcięta_linia = obcięta_linia.rstrip(', ')
-        # log.info(f"Karmie jsona: {{ {ponownie_obcięta_linia} }}")
-        # (id_zasady, (klawisze, litery, alt, flagi, info))
-        # result = json.loads(f'"{{ {ponownie_obcięta_linia} }}"',
-        #                         object_pairs_hook=wykryj_duplikaty_json)
-        # log.info(f"json gives: {result}")
         zasada = Zasada(id_zasady, klawisze, litery, alt, flagi, info, numer_linii)
         zasady[id_zasady] = zasada
         
-    # with open(args.teoria_szablon) as szablon_cson:
-    #     linie_szablonu = szablon_cson.readlines()
-
-    #     if not linie_szablonu[0].startswith('#'):
-    #         raise ValueError(
-    #             'Pierwsza linia w pliku szablonu musi być komentarzem')
-    #         # Inaczej by mi się rozjechały numery linii po dodaniu pierwszej
-    #     linie_szablonu[0] = \
-    #         f'# UWAGA: Plik wygenerowany automatycznie na podstawie {"rules.cson.in"}\n'
-
-    #     szablon_cson.seek(0)
-    #     zasady_json = CommentRemover(szablon_cson)
-    #     # for i, linia in enumerate(zasady_json):
-    #     #     print(f'{i}\t{linia}', end='')
-    #     # zasady_json.seek(0)
-    #     try:
-    #         zasady = json.load(zasady_json,
-    #                            object_pairs_hook=wykryj_duplikaty_json)
-    #     except json.JSONDecodeError as e:
-    #         wyświetl_błąd_json(zasady_json, e)
-    #         raise e
-
-    # print(zasady)
-
-    # Zmień słownik list na słownik obiektów
-    # with open(args.log, 'a') as log_generatora:  # Otwórz w trybie a - append, żeby dopisywać
-    #     for id in zasady:
-    #         # Nazwy zmiennych zgodne z spectra_lexer/doc/rules_format.txt
-    #         keys, letters, alt, flags, info = tuple(zasady[id])
-    #         sformatowane_klawisze = połącz_klawisze(keys)
-    #         if sformatowane_klawisze != keys:
-    #             log_generatora.write(
-    #                 f'Klawisze szablonu: zmieniono "{keys}" na "{sformatowane_klawisze}"\n')
-    #         zasady[id] = Zasada(keys, letters, flags)
-
-    # zasady: Dict[str, Zasada]  # Informacja dla edytora kodu jaki to ma typ
-
-    # Dopisz do zasad z której są linii
-    # for i, linia in enumerate(linie_szablonu):
-    #     linia = linia.strip()
-    #     if linia.startswith('"'):
-    #         id = linia.split('"')[1]
-    #         # Numery linii w pliku zaczynają się od 1
-    #         zasady[id].numer_linii = i + 1
-
     # Inna zasada w tekście: ciąg dowolnych znaków wewnątrz nawiasów
     inna_zasada = re.compile(r'\(([^()]+)\)')
 
@@ -233,12 +372,7 @@ def main():
                 log.info("Mamy wszystkie składowe, można utworzyć ten wpis")
                 utworzone_klawisze = połącz_klawisze(
                     *[zasady[id].klawisze for id in użyte_id])
-                # klawisze_szablonu = zasada.klawisze
                 zasada.klawisze = utworzone_klawisze
-                # definicja = linie_szablonu[zasada.numer_linii - 1]
-                # linie_szablonu[zasada.numer_linii - 1] = \
-                #     definicja.replace(
-                #         f'["{klawisze_szablonu}"', f'["{utworzone_klawisze}"')
                 zmieniono_zasadę = True
                 log.info(f'{zasada} wygenerowana')
 
@@ -252,99 +386,102 @@ def main():
             log.error(błąd)
             raise ValueError(błąd)
 
-    with open(args.teoria, 'w', buffering=512) as zasady_cson:
+    with open(args.teoria, 'w', buffering=10240) as zasady_cson:
         zasady_cson.write(f'# UWAGA: Plik auto-generowany na podstawie {args.teoria_szablon}\n')
         zasady_cson.write("{\n")
         for z in zasady.values():
             zasady_cson.write(z.jako_linia_do_pliku())
         zasady_cson.write("}\n")
 
-    słownik = dict()
-
+    # Słownik wyjściowy, dane w formie:
+    # {tekst: set{("Kombinacja", niedopasowanie)}}
+    # ten format będzie potrzebny, jeśli magia ma zadziałać
+    słownik = defaultdict(lambda: dict{})
     for zasada in zasady.values():
         if not zasada.f_słownik:
             continue  # Nie twórz dla niej nowego słowa
-
         uzupełnij_tekst(zasada, zasady)
-
-        if zasada.klawisze not in słownik:
-            słownik[zasada.klawisze] = zasada.tekst
-        else:
-            log.error(f'Duplikat dla klawiszy `{zasada.klawisze}`: "{zasada.tekst}", już jest "{słownik[zasada.klawisze]}"')
+        słownik[zasada.tekst][zasada.klawisze] = 0
 
     dyspozytor = DyspozytorKlawiszy(log, zasady)
+    
+    # jeśli magia ma zapracować na chleb, musi skorzystać z pośredniaka
+    # dane w formie: {"słowo": [(sylaba, (nagłos, śródgłos, wygłos)))]}
+    # czyli dla każdego słowa mamy listę tupli, każdy element listy opisuje sylabę
+    # długość listy to ilość sylab w słowie
+    pośredniak = dict()
+    numer_linii = 0
+    for linia in czytaj_linie_pliku(args.slowa):
+        numer_linii += 1
+        linia = linia.strip()
+        if linia.startswith('#'):
+            continue
 
-    frekwencja = dict()
-    with open(args.frekwencja, 'r') as dane_frekwencyjne:
-        for linia in dane_frekwencyjne:
-            linia = linia.strip()
-            słowo = linia.split('"')[1]
-            liczba = int(linia.split(',')[1])
-            if słowo in frekwencja:
-                log.error(f'Duplikat "{słowo}" w danych frekwencyjnych, nadpisuję {frekwencja[słowo]} wartością {liczba}')
-            frekwencja[słowo] = liczba
+        sylaby = linia.split('=')
+        klawisze_słowa = []
+        nierozłożona_sylaba = False
+        for sylaba in sylaby:
+            try:
+                klawisze_sylaby = dyspozytor.klawisze_dla_sylaby(sylaba)
+                klawisze_słowa.append((sylaba, klawisze_sylaby))
+            except ValueError as e:
+                log.error(f'Nie znaleziono rozkładu dla sylaby "{sylaba}" słowa "{linia}": {e.args[0]}')
+                nierozłożona_sylaba = True
 
-    # słownik_ze_słów = dict()
+        if not nierozłożona_sylaba:
+            tekst = ''.join(sylaby)
+            pośredniak[tekst] = klawisze_słowa
+            # klawisze = '/'.join(klawisze_słowa)
+            # print(f'Rozłożono {linia} na {klawisze}')
+            # if (klawisze not in słownik): # and (klawisze not in słownik_ze_słów):
+            #     słownik[klawisze] = tekst
+            # TODO trzeba wymyślić jakiś sposób na eleganckie znajdowanie innych
+            # (najlepiej krótszych) kombinacji klawiszy,
+            # żeby słowa nie przepadały z powodu duplikacji akordów
+            # else:
+            #     stare = słownik[klawisze]
+            #     nowe = tekst
 
-    with open(args.slowa) as podzielone_słowa:
-        for numer_linii, linia in enumerate(podzielone_słowa):
+            #     frekw_stare = frekwencja[stare] if stare in frekwencja else -1
+            #     frekw_nowe = frekwencja[nowe] if nowe in frekwencja else -1
 
-            linia = linia.strip()
-            if linia.startswith('#'):
-                continue
+            #     if frekw_nowe > frekw_stare:
+            #         słownik[klawisze] = nowe
 
-            sylaby = linia.split('=')
-            klawisze_słowa = []
-            nierozłożona_sylaba = False
-            for sylaba in sylaby:
-                try:
-                    klawisze_sylaby = dyspozytor.klawisze_dla_sylaby(sylaba)
-                    klawisze_słowa.append(klawisze_sylaby)
-                except ValueError as e:
-                    log.error(f'Nie znaleziono rozkładu dla sylaby "{sylaba}" słowa "{linia}": {e.args[0]}')
-                    nierozłożona_sylaba = True
+            #     log.error(f'Duplikat dla klawiszy `{klawisze}`: "{tekst}"{(" (frekwencja " + str(frekw_nowe) + ")") if frekw_nowe != -1 else ""}, już jest "{stare}"{(" (frekwencja " + str(frekw_stare) + ")") if frekw_stare != -1 else ""} {", zamieniam na nowe" if frekw_nowe > frekw_stare else ""}')
 
-            if not nierozłożona_sylaba:
-                tekst = ''.join(sylaby)
-                klawisze = '/'.join(klawisze_słowa)
-                # print(f'Rozłożono {linia} na {klawisze}')
-                if (klawisze not in słownik): # and (klawisze not in słownik_ze_słów):
-                    słownik[klawisze] = tekst
-                # TODO trzeba wymyślić jakiś sposób na eleganckie znajdowanie innych
-                # (najlepiej krótszych) kombinacji klawiszy,
-                # żeby słowa nie przepadały z powodu duplikacji akordów
-                else:
-                    stare = słownik[klawisze]
-                    nowe = tekst
+        if numer_linii % 10000 == 0 and numer_linii != 0:
+            log.info(f'Przetwarzanie linii {numer_linii}: {linia}')
 
-                    frekw_stare = frekwencja[stare] if stare in frekwencja else -1
-                    frekw_nowe = frekwencja[nowe] if nowe in frekwencja else -1
+    log.info("Wczytałem sylaby, generuję klawisze...")
+    generator = Generator(log, słownik)
+    for linia in czytaj_linie_pliku(args.frekwencja):
+        linia = linia.strip()
+        słowo = linia.split('"')[1]
+        frekwencja = int(linia.split(',')[1])
+        generator.wygeneruj_kombinacje(pośredniak[słowo])
 
-                    if frekw_nowe > frekw_stare:
-                        słownik[klawisze] = nowe
-
-                    log.error(f'Duplikat dla klawiszy `{klawisze}`: "{tekst}"{(" (frekwencja " + str(frekw_nowe) + ")") if frekw_nowe != -1 else ""}, już jest "{stare}"{(" (frekwencja " + str(frekw_stare) + ")") if frekw_stare != -1 else ""} {", zamieniam na nowe" if frekw_nowe > frekw_stare else ""}')
-
-            if numer_linii % 10000 == 0 and numer_linii != 0:
-                log.info(f'Przetwarzanie linii {numer_linii}: {linia}')
-
-    # Kod wyżej jest tak napisany żeby unikał duplikatów,
-    # na wszelki wypadek ważniejsze słowniki są na końcu żeby nadpisać poprzednie
-    # słownik_całość = dict()
-    # słownik_całość.update(słownik_ze_słów)
-    # słownik_całość.update(słownik_z_teorii)
+    log.info("Słownik utworzony, zapisuję...")
+    with open(args.slownik[:-5]+"_niesortowany.json", 'w', buffering=1024000) as plik_wynikowy:
+        plik_wynikowy.write('{\n')
+        for linia in generator.generuj_do_pliku():
+            plik_wynikowy.write(linia)
+        plik_wynikowy.write('}\n')
 
     # Posortuj słowa według kolejności klawiszy
+    log.info("Zapis niesortowanego słownika zakończony, sortuję...")
     kolejność = '/#XFZSKTPVLR-JE~*IAUCRLBSGTWOY'
-    słownik = collections.OrderedDict(
-        sorted(słownik.items(), key=lambda wpis:
+    posortowany_słownik = collections.OrderedDict(
+        sorted(generator.kombinacje.items(), key=lambda wpis:
                [kolejność.index(k) for k in wpis[0]]))
 
-    linie = [f'"{klawisze}": "{tekst}"'
-             for klawisze, tekst in słownik.items()]
-
-    with open(args.slownik, 'w') as slownik:
-        slownik.write('{\n' + ',\n'.join(linie) + '\n}')
+    log.info("Sortowanie zakończone, zapisuję...")
+    with open(args.slownik, 'w', buffering=1024000) as plik_wynikowy:
+        plik_wynikowy.write('{\n')
+        for klawisze, tekst in posortowany_słownik.items():
+            plik_wynikowy.write(f'"{klawisze}": "{tekst}"\n')
+        plik_wynikowy.write('{\n')
+    log.info("Fajrant")
 
 
 class Zasada:
