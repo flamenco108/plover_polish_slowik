@@ -180,7 +180,7 @@ class Generator():
             # Wszystkie literki powinny być dopasowane
             # nagłos - lewa, śródgłos - kciuk(i), wygłos - prawa
             self.log.debug(f"Sylaby: {sylaby}")
-            (nagłos, śródgłos, wygłos) = self.rozłóż_sylabę(sylaby[0])
+            (nagłos, śródgłos, wygłos) = self.rozbite_sylaby[sylaby[0]]
             kombinacja = ""
             for litera in nagłos:
                 kombinacja += fonemy_spółgłoskowe[litera][0]
@@ -201,7 +201,7 @@ class Generator():
             kombinacja_środkowa = ""
             kombinacja_prawa = ""
             self.log.debug(f"rozbijam {sylaby[0]}")
-            (nagłos, śródgłos, wygłos) = self.rozłóż_sylabę(sylaby[0])
+            (nagłos, śródgłos, wygłos) = self.rozbite_sylaby[sylaby[0]]
             for litera in nagłos:
                 self.log.debug(f"N: {litera}")
                 kombinacja_lewa += fonemy_spółgłoskowe[litera][0]
@@ -215,7 +215,7 @@ class Generator():
                 kombinacja_prawa += fonemy_spółgłoskowe[litera][1]
                 self.log.debug(f"2>1W:{kombinacja_prawa}")
 
-            (nagłos, śródgłos, wygłos) = self.rozłóż_sylabę(sylaby[1])
+            (nagłos, śródgłos, wygłos) = self.rozbite_sylaby[sylaby[1]]
             for litera in nagłos:
                 kombinacja_prawa += fonemy_spółgłoskowe[litera][1]
                 self.log.debug(f"2>2N:{kombinacja_prawa}")
