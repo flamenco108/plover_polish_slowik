@@ -493,7 +493,7 @@
   "wkł.":         ["FKLJ",        "(w|f.)(k.)(ł.)",                      "", "ONSET",              "WKŁ- jak wkłuć"],
   "wkr.":         ["FKR",         "(w|f.)(k.)(r.)",                      "", "ONSET",              "WKR- jak wkręcić"],
   "wkrz.":        ["FKRJ",        "(w|f.)(k.)(rz.)",                     "", "ONSET",              "WKRZ- jak wkrzański"],
-  "wl.":          ["VL",          "(w.)l",                       "", "ONSET",              "WL- jak wlecieć"],
+  "wl.":          ["VL",          "(w.)(l.)",                       "", "ONSET",              "WL- jak wlecieć"],
   "wł.":          ["VLJ",         "(w.)(ł.)",                       "", "ONSET",              "WŁ- jak włamać"],
   "wm.":          ["FTV",         "(w|f.)(m.)",                       "", "ONSET",              "WM- jak wmanewrować"],
   "wmi.":          ["FTVJ",         "(wm.)(~j)",                       "", "ONSET",              "WMI- jak wmieszać"],
