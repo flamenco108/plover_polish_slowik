@@ -736,7 +736,7 @@
   # jak napisać DŻDŻ? XPWGW?
   ".dżdż":  ["-GW",      "(dżdż|.dż)",     "", "CODA", "-DŻDŻ jak hadżdż (tylko obce)"],
   ".dżm":   ["-CSGW",    "(.dż)(.m)",      "", "CODA  INVERSION", "-DŻM jak pradżm (tylko obce?)"],
-  ".dżr":   ["-RSG",     "(.dż)(.r)",      "", "CODA INVERSION", "-DŻR jak hidżr (tylko obce?)"],
+  ".dżr":   ["-RSG",     "(dż|.ż)(.r)",      "", "CODA INVERSION", "-DŻR jak hidżr (tylko obce?)"],
   ".f":     ["-W",       "(f|.w)",        "", "CODA", "-F jak szef"],
   ".ff":    ["-W",       "(ff|.f)",       "", "CODA", "-W jak chów"],
   ".fl":    ["-LW",      "(.f)(.l)",       "", "CODA INVERSION", "-FL jak trefl"],
