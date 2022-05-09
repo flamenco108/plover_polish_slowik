@@ -748,7 +748,7 @@
   ".gdz":   ["-CG",      "(.g)(.dz)",      "", "CODA INVERSION", "-GDZ jak wo=łogdz=cy"],
   ".gf":    ["-GW",      "(.g)(.f)",       "", "CODA", "-GF jak agf"],
   ".gg":    ["-G",       "gg",       "", "CODA", "-GG jak higg=son (tylko obce)"],
-  ".gh":    ["-G",      "(gh.)",       "", "CODA", "-GR jak figh=ter (tylko obce)"],
+  ".gh":    ["-G",      "(gh|.g)",       "", "CODA", "-GR jak figh=ter (tylko obce)"],
   ".ght":    ["-GT",      "(ght|.kt)",       "", "CODA", "-GHT jak right (tylko obce)"],
 # propozycja KS  
   # ".ght":   ["-CRT",      "(ght|.jt)",      "", "CODA", "-GHT jak right (tylko obce)"],
