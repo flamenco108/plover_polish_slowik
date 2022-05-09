@@ -702,7 +702,7 @@
   ".chś":   ["-CBSO",    "(.ch)(.ś)",      "", "CODA", "-CHŚ jak ja=kichś"],
   ".chsi":  ["-CBSW",    "(.ch)(.si)",     "", "CODA", "-CHSI nie występuje samodzielnie"],
   ".cht":   ["-CBT",     "(.ch)(.t)",      "", "CODA", "-CHT jak wicht"],
-  ".chtr":  ["-CRBT",    "(ch.)(.t)(.r)",     "", "CODA", "-CHTR jak blichtr"],
+  ".chtr":  ["-CRBT",    "(.ch)(.t)(.r)",     "", "CODA", "-CHTR jak blichtr"],
   ".chw":   ["-CBW",     "(.ch)(.w)",      "", "CODA", "-CHW jak brzechw"],
   ".cz":    ["-GW",      "cz",       "", "CODA", "-CZ jak licz"],
   ".czb":   ["-BGW",     "(.cz)(.b)",      "", "CODA", "-CZB jak liczb"],
