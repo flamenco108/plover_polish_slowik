@@ -766,7 +766,7 @@
   ".jch":   ["-CRB",     "(.j)(ch|.b)",      "", "CODA", "-JCH jak wajch"],
   ".jcz":   ["-CRGW",    "(.j)(.cz)",      "", "CODA", "-JCZ jak fajcz"],
   ".jd":    ["-CRT",     "(.j)(.d)",       "", "CODA", "-JD jak znajd"],
-  ".jdź":   ["-CRTW",    "(.j)(.dź)",      "", "CODA", "-JDŹ jak znajdź"],
+  ".jdź":   ["-CRTW",    "(.j)(.ci)",      "", "CODA", "-JDŹ jak znajdź"],
   ".jf":    ["-CRW",     "(.j)(.f)",       "", "CODA", "-JF jak sejf"],
   ".jg":    ["-CRG",     "(.j)(.g)",       "", "CODA", "-JG jak tajg"],
   ".jk":    ["-CRG",     "(.j)(.k)",       "", "CODA", "-JK jak strajk"],
