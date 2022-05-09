@@ -672,7 +672,7 @@
   ".br":    ["-RB",      "(.b)(.r)",       "", "CODA INVERSION", "-BR jak dóbr"],
   ".brz":   ["-BSG",     "(.b)(.rz)",      "", "CODA", "-BRZ jak srebrz"],
   ".bs":    ["-BS",      "(.b)(.s)",       "", "CODA", "-BS jak plebs"],
-  ".bsk":   ["-LBS",     "(bsk|.ł)",      "", "CODA", "-BSK jak żabsk"],
+  ".bsk":   ["-LBS",     "(bsk|.łz)",      "", "CODA", "-BSK jak żabsk"],
   ".bstw":  ["-BSTW",    "(.b)(.s)(.t)(.w)",     "", "CODA", "-BSTW jak hrabstw"],
   ".bsz":   ["-BSG",     "(.b)(.sz)",      "", "CODA", "-BSZ (nie ma reprezentacji, dlaczego to jest?)"],
   ".bt":    ["-BT",      "(.b)(.t)",       "", "CODA", "-BT (nie ma reprezentacji, dlaczego to jest?)"],
