@@ -6,7 +6,7 @@
  # Definicje nagłosów - lewa strona
   # Na podstawie onsets-slovik.ods
 
-  "b.":           ["PJ",          "(p.)(~j)",                        "", "ONSET",             "B- jak baba"],
+  "b.":           ["XP",          "b",                        "", "ONSET",             "B- jak baba"],
   "bi.":          ["XPJ",          "(b.)(~j)",                        "", "ONSET",             "BI- jak biała"],
   "bl.":          ["XPL",         "(b.)(l.)",                 "", "ONSET",             "BL- jak blacha, blok"],
   "bli.":         ["XPLJ",        "(b.)(l.)(~j)",             "", "ONSET",             "BLJ- jak bi=blia"],
@@ -1127,46 +1127,52 @@
   ".rzm":   ["-CSG",     "rzm",      "", "CODA", ""],
   ".rzch":  ["-CRB",     "rzch",     "", "CODA", ""],
 
-  ### ### ###
   # Definicje głosów (samogłosek) - środek
   # Na podstawie samogloski.ods:JEIAU-mid
-  "~j": ["J",   "i",         "zm.",  "NUCLEUS", "udźwięczniające, czasem zmiękczające"],
+  "~j": ["J",   "i",         "zm.",  "NUCLEUS", "zmiękczające/uższypiające: siaki, szyk, spiek"],
   "~i": ["I",   "i",         "nos.", "NUCLEUS", "unosowienie `ą`, `ę` lub zmiękczające `ź`"],
   "~i+":["I",  "i",          "zm.",  "NUCLEUS", "zmiękczające `ź`"],
   "e":  ["E",   "e",         "",     "NUCLEUS", "`e` jak `bela`"],
-  # obce dyftongi ae, ee, au, eu
-  "ae": ["E",    "(ae|e)",    "",     "NUCLEUS", "AE jak reg=gae"],
-  "ee": ["E",    "(ee|e)",    "",     "NUCLEUS", "EE jak weekend"],
-  "au": ["EA",    "(e.)(a.)",    "",     "NUCLEUS", "AU jak Australia"],
-  "eu": ["EU",    "(e.)(u.)",    "",     "NUCLEUS", "EE jak eusocjalny"],
-  # koniec dyftongów
+  # obcy dyftong ae
+  "ae": ["",    "(ae|e)",    "",     "NUCLEUS", "AE jak reg=gae"],
+  "ee": ["",    "(ee|e)",    "",     "NUCLEUS", "EE jak weekend"],
   "i":  ["I",   "i",         "",     "NUCLEUS", "`i` jak `bila`"],
-  # poniższe jeszcze do sprawdzenia! (TODO)
+  "i.":  ["J",   "(i|j.)",         "",     "ONSET", "I- jak o=iom"],
+  # TODO: JĘZYK: Dostosować info dla pozostałych samogłosek
   "a":  ["A",   "a",         "",     "NUCLEUS", "bal"],
-  "u":  ["U",   "u",         "",     "NUCLEUS", "U jak szum"],
-  "ó":  ["EIU",   "ó",         "",     "NUCLEUS", "ból"],
+  "ai": ["ACR", "(a)(i|.j)",         "",     "NUCLEUS", "AI jak aids"],
+  "u":  ["U",   "u",         "",     "NUCLEUS", ""],
+  "ó":  ["U",   "ó",         "",     "NUCLEUS", "ból"],
   "o":  ["AU",  "o",         "",     "NUCLEUS", "bok"],
-  "ę":  ["EIA",    "ę",       "",   "NUCLEUS", "pęk, (wejście?)"],
-  "ą":  ["EAU",    "ą",       "",   "NUCLEUS", "wąski, (ojczyzna?)"],
-  "y":  ["IAU",  "y" ,        "",     "NUCLEUS", "pysk"],
-  # !!! uwaga
-  "y+": ["EIAU",    "y", "",     "", "`y` po spółgłoskach B,D,DZ,H (bydło, dywan, hybryda, dzyndzel)"],
-  "ia": ["IA",    "(i)(a)",   "",     "NUCLEUS", "piach, płachta, wszak"],
-  "ie": ["",    "(i)(e)",   "",     "NUCLEUS", "piec, chłeptać, wrzeszczeć, szelak"],
-  "io": ["JAU",    "(~j)(o)",   "",     "NUCLEUS", "piosenka, chłop, wrzos, szok"],
-  "iu": ["IU",    "(i)(u)",   "",     "NUCLEUS", "miód, przód, wrzód"],
-  "ię": ["JEIA",    "(i)(ę)",   "",     "NUCLEUS", "pięść, rzęsa, łęgi"],
-  "ią": ["JEAU",    "(~j)(ą)",   "",     "NUCLEUS", "piąstki, łąka, jojczyć, ijon, kijowska, poi"],
-  
-  ### Dla kombinacji BY,DY,DZY,HY obowiązuje obejście EIAU
-  "by": ["PEIAU",    "(b|p.)(+y)", "",     "RARE", "bydło, byt"],
-  "dy": ["TEIAU",    "(d|t.)(+y)", "",     "RARE", "dywan, dyletant"],
-  "gy": ["TEIAU",    "(g|k.)(+y)", "",     "RARE", "gyros, gynerium (obce)"],
-  "dzy": ["ZSEIAU",    "(dz|c.)(+y)", "",     "RARE", "dzyndzel, dzyń (rzadkie)"],
-  "hy": ["KTEIAU",    "(h|ch.)(+y)", "",     "RARE", "hypatia, hybryda (obce)"],
-
-  ### ### ###
-
+  "ę":  ["",    "(ę|e)(|~i)","",   "NUCLEUS", "pęk, wejście"],
+  "ą":  ["",    "(ą|a)(|~i)","",   "NUCLEUS", "wąski, ojczyzna"],
+  "y":  ["EU",  "y" ,        "",     "NUCLEUS", "pysk"],
+  "ia": ["",    "(~j)(a)",   "",     "NUCLEUS", "piach, płachta, wszak"],
+  "ja": ["",    "(j.)(a)",   "",     "NUCLEUS", ""],
+  "ya": ["",    "(y|~j)(a)", "",     "NUCLEUS", ""],
+  "ie": ["",    "(~j)(e)",   "",     "NUCLEUS", "piec, chłeptać, wrzeszczeć, szelak"],
+  "je": ["",    "(j.)(e)",   "",     "NUCLEUS", ""],
+  "ye": ["",    "(y|j.)(e)", "",     "NUCLEUS", ""],
+  "io": ["",    "(~j)(o)",   "",     "NUCLEUS", "piosenka, chłop, wrzos, szok"],
+  "io.": ["",    "(i|~j)(o)",   "",     "ONSET", "IO jak o=iom"],
+  "jo": ["",    "(j.)(o)",   "",     "NUCLEUS", ""],
+  "yo": ["",    "(y|j.)(o)", "",     "NUCLEUS", ""],
+  "iu": ["",    "(i|~j)(u)",   "",     "NUCLEUS", "miód, przód, wrzód"],
+  "ju": ["",    "(j.)(u)",   "",     "NUCLEUS", ""],
+  "yu": ["",    "(y|j.)(u)",   "",     "NUCLEUS", ""],
+  "ió": ["",    "(i|~j)(ó)",   "",     "NUCLEUS", ""],
+  "jó": ["",    "(j.)(ó)",   "",     "NUCLEUS", ""],
+  "yó": ["",    "(y|j.)(ó)",   "",     "NUCLEUS", ""],
+  "ii": ["",    "(i|~j)(i)",   "",     "NUCLEUS", "Jidysz?, szyk, łyk, nik + ew. końcówki: żmii, frezji, spacji"],
+  "ji": ["",    "(j|~j)(i)", "",     "NUCLEUS", ""],
+  "yi": ["",    "(y|j.)(i)", "",     "NUCLEUS", ""],
+  "jy": ["",    "(j.)(y)",   "",     "NUCLEUS", ""],
+  "ię": ["",    "(i|~j)(ę)",   "",     "NUCLEUS", "pięść, rzęsa, łęgi"],
+  "ję": ["",    "(j.)(ę)",   "",     "NUCLEUS", ""],
+  "yę": ["",    "(j.)(ę)",   "",     "NUCLEUS", ""],
+  "ią": ["",    "(i|~j)(ą)",   "",     "NUCLEUS", "piąstki, łąka, jojczyć, ijon, kijowska, poi"],
+  "ją": ["",    "(j.)(ą)",   "",     "NUCLEUS", ""],
+  "yą": ["",    "(y|j.)(ą)", "",     "NUCLEUS", ""],
 
   # # Orthographic rules - vowels
   # "oo":  ["AO", "oo", "OO", "",     "spelling of `oo` is always AO"],
