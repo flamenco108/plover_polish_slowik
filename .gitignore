@@ -8,3 +8,13 @@ venv/
 
 # LibreOffice
 .~lock.*
+
+
+=======
+/*.egg-info/
+/build/
+/dist/
+/__pycache__/
+*.pyc
+
+.~lock.*
