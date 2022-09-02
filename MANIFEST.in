@@ -1,0 +1,12 @@
+# the system in use determines the configuration default list of dictionaries 
+# ('slowik_user.json', 'slowik_suffixes.json', 'slowik_prefixes.json', 'slowik_roots.json' with yours)
+# Plover will load those from the user's config directory
+# if a dictionary is missing, a copy will be made from the system's version
+# so for example, as a user, to update your copy of Plover's main dictionary
+# after updating Plover itself (and assuming you've not changed it),
+# you can just remove the copy in your config dir, and trigger a reload
+# (e.g. by clicking the reconnect button in the GUI) or restart Plover
+# from looking at your plugin' source on Github, you're missing some metadata
+# to tell setuptools to bundle the dictionaries:
+
+include plover_polish_slowik/dictionaries/*.json
