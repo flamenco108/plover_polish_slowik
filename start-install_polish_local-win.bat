@@ -1,6 +1,37 @@
-echo Usuwam słowniki z C:\Users\flamenco\AppData\Local\plover\plover
+echo
+echo
+echo
+echo
+echo Usuwam slowniki z C:\Users\flamenco\AppData\Local\plover\plover
+echo
+echo
+echo
+echo
+
 del "C:\Users\flamenco\AppData\Local\plover\plover\slowik*" /s /f /q
-echo Słowniki usunięte!
-echo Ładuję plugin D:\Flamenco\Git\plover_polish_slowik
+
+echo
+echo
+echo
+echo
+echo S�owniki usuniete!
+echo
+echo
+@echo off
+echo. 
+echo.
+echo �aduj� plugin D:\Flamenco\Git\plover_polish_slowik
+echo.
+echo.
+echo.
+echo.
 "C:\Program Files\Open Steno Project\Plover 4.0.0.dev12\plover_console.exe" -s plover_plugins install "D:\Flamenco\Git\plover_polish_slowik"
-echo Plugin załadowany!
+echo.
+echo.
+echo.
+echo.
+echo Plugin zaladowany!
+echo.
+echo.
+echo.
+echo.
