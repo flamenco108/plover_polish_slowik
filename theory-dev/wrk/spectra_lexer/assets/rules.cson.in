@@ -1557,6 +1557,10 @@
   # "they":   ["THE",    "(t.)(h.)(e)y",   "", "WORD", "common brief"],
   # "were":   ["W-R",    "(w.)e(.r)e",     "", "WORD", "common brief"],
 
+
+#### #####
+
+
   # Główne zasady dla literowania
   "~LIT": ["*",   "",  "*", "REFERENCE", "używaj z klawiszami po lewej i samogłoskami żeby literować"],
   "~ALT": ["~",   "",  "",  "REFERENCE", "wybierz alternatywną pisownię dla tych klawiszy"],
@@ -1641,54 +1645,102 @@
   "Ż*": ["", "(ż*)(~DUŻ)", "", "STROKE UPPERCASE DICT", "literowanie: `Ż`"],
   "Ź*": ["", "(ź*)(~DUŻ)", "", "STROKE UPPERCASE DICT", "literowanie: `Ź`"],
 
-  # Symbole
-  "-":   ["L-LB",      "-",       "",  "DICT",   "- (minus)"],
-  # TODO: Zarezerwuj żeby EAU nie było wykorzystane w samogłoskach
-  # TODO: Jeśli ma być wykorzystywane do liczb, to na klawiaturze kos będzie ciężko wcisnąć oba I razem z AU
-  "/":   ["EAU",       "/",       "",  "DICT",   "/ (ukośnik)"],
-  # # TODO: Symbole od tego miejsca
-  # "'":   ["AE",        "'",       "",  "",       "' (apostrophe)"],
-  # "-'s": ["AES",       "(')(.s)", "",  "",       "possessive suffix `'s`"],
-  # ".":   ["-FPLT",     ".",       "",  "",       ". (period)"],
-  # ",":   ["-RBGS",     ",",       "",  "",       ", (comma)"],
-  # "?":   ["KWEZ",      "?",       "",  "",       "? (question mark)"],
-  # "!":   ["SKHRAPL",   "!",       "",  "",       "! (exclamation mark)"],
+
+##### #####
+
+#### Znaki specjalne, przestankowe, symbole, znaczki
+
+  # ".":   ["-FPLT",     ".",       "",  "",       ". (period) kropka"],
   # "-.":  ["TP-PL",     ".",       "",  "STROKE", "ending . (period)"],
+  ".":   ["X*O",     ".",       "",  "",       ". (kropka międzysłowna np. w adresach internetowych)"],
+  "-.":  ["P-L",     ".",       "",  "STROKE", " . (kropka)"],
+
+  # ",":   ["-RBGS",     ",",       "",  "",       ", (comma) przecinek"],
   # "-,":  ["KW-BG",     ",",       "",  "STROKE", "ending , (comma)"],
+  "-,":  ["V-B",     ",",       "",  "STROKE", " , (przecinek)"],
+  # "?":   ["KWEZ",      "?",       "",  "",       "? (question mark) znak zapytania"],
   # "-?":  ["KW-PL",     "?",       "",  "STROKE", "ending ? (question mark)"],
+
+  "-?":  ["V-L",     "?",       "",  "STROKE", " ? (znak zapytania)"],
+
+  "-":   ["ST-GW",      "-",       "",  "DICT",   "- (minus lub myślnik czyli łącznik, czyli dywiz)"],
+  "—":   ["ST*GW",      "-",       "",  "DICT",   "— (myślnik lub pauza)"],
+  # "_":   ["RUPBD",     "_",       "",  "STROKE", "_ (underscore)"],
+
+  # "!":   ["SKHRAPL",   "!",       "",  "",       "! (exclamation mark) wykrzyknik"],
   # "-!":  ["TP-BG",     "!",       "",  "STROKE", "ending ! (exclamation mark)"],
+  "-!":  ["P-B",     "!",       "",  "STROKE", " ! (wykrzyknik)"],
+  "'":   ["LR-CR",        "'",       "",  "",       "' (apostrof czyli ciapek)"],
+  # "-'s": ["AES",       "(')(.s)", "",  "",       "possessive suffix `'s`"],
   # "'-":  ["SKW-T",     "'",       "",  "STROKE", "starting ' (single quote)"],
   # "-'":  ["SKW*T",     "'",       "",  "STROKE", "ending ' (single quote)"],
+
   # "\"-": ["KW-GS",     "\"",      "",  "STROKE", "starting \" (double quote)"],
+  "„": ["TVR-RBG",     "\"",      "",  "STROKE", " \" (otworzyć cudzysłów)"],
   # "-\"": ["KR-GS",     "\"",      "",  "STROKE", "ending \" (double quote)"],
+  "”": ["KPL-CLS",     "\"",      "",  "STROKE", "ending \" (zamknąć cudzysłów)"],
+
   # "`-":  ["TR-RL",     "`",       "",  "STROKE", "starting ` (back quote)"],
   # "-`":  ["TR*RL",     "`",       "",  "STROKE", "ending ` (back quote)"],
+
   # "(":   ["PREPB",     "\\(",     "",  "STROKE", "( (left parenthesis)"],
+  "(":   ["STVR-RBGW",     "\\(",     "",  "STROKE", "( (lewy nawias)"],
   # ")":   ["PR*EPB",    ")",       "",  "STROKE", ") (right parenthesis)"],
+  ")":   ["ZKPL-CLST",    ")",       "",  "STROKE", ") (prawy nawias)"],
+
+## UWAGA!
+
   # "[":   ["PWR-BGT",   "[",       "",  "STROKE", "[ (left bracket)"],
+  "[":   ["KTPV-LBSG",   "[",       "",  "STROKE", "[ (lewy nawias kwadratowy)"],
   # "]":   ["PWR*BGT",   "]",       "",  "STROKE", "] (right bracket)"],
+  "]":   ["KTPV*LBSG",   "]",       "",  "STROKE", "] (prawy nawias kwadratowy)"],
+
+  # "{":   ["TPR-BGT",   "{",       "",  "STROKE", "{ (left curly brace)"],
+  "{":   ["KTPV-LBSG",   "{",       "",  "STROKE", "{ (lewy nawias klamrow)"],
+  # "}":   ["TPR*BGT",   "}",       "",  "STROKE", "} (right curly brace)"],
+  "}":   ["ZSKT-SGTW",   "}",       "",  "STROKE", "} (prawy nawias klamrowy)"],
+
+
   # "<":   ["PWRABG",    "<",       "",  "STROKE", "< (left angle bracket)"],
   # ">":   ["PWRA*BG",   ">",       "",  "STROKE", "> (right angle bracket)"],
-  # "{":   ["TPR-BGT",   "{",       "",  "STROKE", "{ (left curly brace)"],
-  # "}":   ["TPR*BGT",   "}",       "",  "STROKE", "} (right curly brace)"],
+
+  "/":   ["VR-CL",       "/",       "",  "DICT",   "/ (slash czyli ukośnik, czyli ciach)"],
   # "\\":  ["SPWHRAERB", "\\",      "",  "STROKE", "\\ (backslash)"],
+  "\\":  ["PL-RB", "\\",      "",  "STROKE", "\\ (backslash czyli lewy ukośnik, czyli w tył ciach)"],
+
   # "+":   ["PHR*US",    "+",       "",  "STROKE", "+ (plus sign)"],
   # "=":   ["KWA*LS",    "=",       "",  "STROKE", "= (equals sign)"],
   # "#":   ["HAERB",     "#",       "",  "STROKE", "# (number sign)"],
   # "$":   ["TK-PL",     "$",       "",  "STROKE", "$ (dollar sign)"],
   # "%":   ["P*ERS",     "%",       "",  "STROKE", "% (percent sign)"],
   # "&":   ["A*PBD",     "&",       "",  "STROKE", "& (ampersand)"],
+
   # "@":   ["KWRAT",     "@",       "",  "STROKE", "@ (at symbol)"],
+  "@":   ["PVLR-CRLB",     "@",       "",  "STROKE", "@ (at czyli małpa)"],
+
   # "*":   ["STA*R",     "*",       "",  "STROKE", "* (asterisk)"],
-  # "_":   ["RUPBD",     "_",       "",  "STROKE", "_ (underscore)"],
+
+
   # "~":   ["T*LD",      "~",       "",  "STROKE", "~ (tilde)"],
   # "|":   ["PAO*EUP",   "|",       "",  "STROKE", "| (pipe)"],
   # "^":   ["KR-RT",     "^",       "",  "STROKE", "^ (caret)"],
+
   # ":":   ["STPH-FPLT", ":",       "",  "STROKE", ": (colon)"],
+  ":":   ["VR*RB", ":",       "",  "STROKE", ": (dwukropek)"],
   # ";":   ["STPH*FPLT", ";",       "",  "STROKE", "; (semicolon)"],
+  ";":   ["VR-RB", ";",       "",  "STROKE", "; (średnik)"],
+
+
   # "...": ["SKWR-RBGS", "...",     "",  "STROKE", "... (ellipsis)"],
+  "…": ["ZK-ST", "…",     "",  "STROKE", "... … (trzykropek czyli wielokropek)"],
+
+
+
   # "CAP": ["KPA",       "{}",      "↑", "STROKE", "capitalizes next word"],
   # " ":   ["SP-S",      "",        "",  "RARE",   "explicit space (usually in dictionary by mistake)"],
+
+#### #### ####
+#### LICZBY
 
   # Główne zasady dla liczb
   "~#":  ["#",  "",    "#   #   #   #   #", "REFERENCE", "włącza tryb liczb"],
